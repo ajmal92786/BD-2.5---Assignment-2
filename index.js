@@ -174,29 +174,63 @@ let stocks = [
   },
 ];
 
-// Function to sort the stocks based on the pricing low-to-high or high-to-low.
-function sortByPricing(stock1, stock2) {
+
+// Function to sort stocks from low to high price
+function sortByPricingLowToHigh(stock1, stock2) {
   return stock1.price - stock2.price;
+}
+
+// Function to sort stocks from high to low price
+function sortByPricingHighToLow(stock1, stock2) {
+  return stock2.price - stock1.price;
+}
+
+// Function to sort the stocks based on the pricing low-to-high or high-to-low.
+function sortByPricing(stocks, pricing) {
+  let stocksCopy = stocks.slice();
+  if (pricing === 'low-to-high') {
+    return stocksCopy.sort(sortByPricingLowToHigh);
+  } else if (pricing === 'high-to-low') {
+    return stocksCopy.sort(sortByPricingHighToLow);
+  }
 }
 
 // Endpoint 1: Get the stocks sorted by pricing
 app.get('/stocks/sort/pricing', (req, res) => {
-  let sortedStocks = stocks.slice();
-  sortedStocks.sort(sortByPricing);
+  let pricing = req.query.pricing;
+  let sortedStocks = sortByPricing(stocks, pricing);
+
   res.json({ stocks: sortedStocks });
 });
 
-// Function to sort stocks based on their individual growth rate.
-function sortByGrowth(stock1, stock2) {
+// Function to sort stocks from low to high growth
+function sortByGrowthLowToHigh(stock1, stock2) {
+  return stock1.growth - stock2.growth;
+}
+
+// Function to sort stocks from high to low growth
+function sortByGrowthHighToLow(stock1, stock2) {
   return stock2.growth - stock1.growth;
+}
+
+// Function to sort stocks based on their individual growth rate.
+function sortByGrowth(stocks, growth) {
+  let stocksCopy = stocks.slice();
+  if (growth === 'low-to-high') {
+    return stocksCopy.sort(sortByGrowthLowToHigh);
+  } else if (growth === 'high-to-low') {
+    return stocksCopy.sort(sortByGrowthHighToLow);
+  }
 }
 
 // Endpoint 2: Get the stocks sorted based on their Growth.
 app.get('/stocks/sort/growth', (req, res) => {
-  let sortedStocks = stocks.slice();
-  sortedStocks.sort(sortByGrowth);
+  let growth = req.query.growth;
+  let sortedStocks = sortByGrowth(stocks, growth);
+
   res.json({ stocks: sortedStocks });
 });
+
 
 // Function to filter stocks based on the two available stock exchanges
 function filterByExchange(stock, exchange) {
